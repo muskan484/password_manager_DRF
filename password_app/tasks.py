@@ -1,3 +1,4 @@
+import os
 from celery import shared_task
 from firebase_admin import storage
 from password_manager import settings
@@ -67,7 +68,7 @@ def upload_password_data_weekly_to_firebase():
     Returns: A message indicating the successful upload of the weekly data to Firebase Storage.
     """
 
-    bucket = storage.bucket('password-manager-1307f.appspot.com')
+    bucket = storage.bucket(os.environ.get('BUCKET_NAME'))
     weekly_data,last_week,today = weekly_report()
     destination = f"weekly_data/password_data_{last_week.strftime("%Y-%m-%d")}_to_{today.strftime("%Y-%m-%d")}.json"
     blob = bucket.blob(destination)
