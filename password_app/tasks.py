@@ -73,4 +73,4 @@ def upload_password_data_weekly_to_firebase():
     destination = f"weekly_data/password_data_{last_week.strftime("%Y-%m-%d")}_to_{today.strftime("%Y-%m-%d")}.json"
     blob = bucket.blob(destination)
     blob.upload_from_string(weekly_data, content_type='text/plain')
-    return f"Weekly data uploaded to Firebase Storage: {destination}"
+    return f"Weekly data uploaded to Firebase Storage: {destination} "
