@@ -3,7 +3,7 @@ from celery import shared_task
 from firebase_admin import storage
 from password_manager import settings
 from django.core.mail import send_mail
-from password_manager.utility import weekly_report
+from password_manager.utility import weekly_password_report
 
 @shared_task
 def send_password_add_mail(target_mail, user, website_name):
@@ -69,7 +69,7 @@ def upload_password_data_weekly_to_firebase():
     """
 
     bucket = storage.bucket(os.environ.get('BUCKET_NAME'))
-    weekly_data,last_week,today = weekly_report()
+    weekly_data,last_week,today = weekly_password_report()
     destination = f"weekly_data/password_data_{last_week.strftime("%Y-%m-%d")}_to_{today.strftime("%Y-%m-%d")}.json"
     blob = bucket.blob(destination)
     blob.upload_from_string(weekly_data, content_type='text/plain')

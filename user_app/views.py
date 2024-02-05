@@ -1,12 +1,11 @@
+from rest_framework import views
 from rest_framework import status
-from rest_framework import generics, views
-from django.contrib.auth.models import User
+from .serializers import RegisterSerializer
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from user_app.tasks import send_welcome_mail
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import RegisterSerializer, UserSerializer
 
 class RegisterUser(views.APIView):
     """
@@ -60,4 +59,3 @@ class LoginUser(views.APIView):
             }, status=status.HTTP_200_OK)
         else:
             return Response({"message": "Invalid login credentials"}, status=status.HTTP_401_UNAUTHORIZED)
-

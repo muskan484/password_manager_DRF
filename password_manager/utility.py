@@ -9,6 +9,7 @@ import requests
 from Crypto.Cipher import AES
 from rest_framework import status
 from datetime import datetime, timedelta
+from django.contrib.auth.models import User
 from rest_framework.response import Response
 from password_app.models import PasswordVault
 
@@ -89,7 +90,7 @@ def decrypt_password(base64_password):
     decrypted_password = cipher.decrypt(encrypted_password).decode('utf-8')     # Decrypt the password
     return decrypted_password
 
-def weekly_report():
+def weekly_password_report():
     """
     Generate a weekly report of password data.
 
@@ -100,4 +101,18 @@ def weekly_report():
     last_week_data = list(PasswordVault.objects.filter(created_at__date__gte = last_week).values())
     for data in last_week_data:
         data['created_at'] = data['created_at'].strftime("%Y-%m-%d %H:%M:%S")
-    return json.dumps(last_week_data), last_week,today
+    return json.dumps(last_week_data), last_week, today
+
+def weekly_user_report():
+    """
+    Generate a weekly report of user data.
+
+    Returns: tuple: Tuple containing JSON string of data, last week's date, and today's date.
+    """
+    today = datetime.now().date()
+    last_week = today-timedelta(days=7)
+    last_week_user_data = list(User.objects.filter(date_joined__date__gte = last_week).values())
+    for data in last_week_user_data:
+        data['date_joined'] = data['date_joined'].strftime("%Y-%m-%d %H:%M:%S")
+    return json.dumps(last_week_user_data), last_week, today
+

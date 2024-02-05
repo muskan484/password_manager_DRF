@@ -9,10 +9,15 @@ app = Celery('password_manager')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
 app.conf.beat_schedule = {
-    'send_weekly_summary_email_on_monday':{
+    'send_weekly_password_data_on_monday':{
         'task': 'password_app.tasks.upload_password_data_weekly_to_firebase',
+        # 'schedule' :crontab(minute='*/3', hour='*', day_of_week='*', day_of_month='*', month_of_year='*')
         'schedule' : crontab(minute = 0, hour= 0, day_of_week='monday')
-}
+    },
+    "send_weekly_user_data_on_monday":{
+        "task":"user_app.tasks.upload_user_data_weekly_to_firebase",
+        'schedule' : crontab(minute = 0, hour= 0, day_of_week='monday')
+    }
 }
 app.conf.enable_utc = False
 
